@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.htcs.wework.system.dao.SysRoleMapper">
+  <resultMap id="BaseResultMap" type="com.htcs.wework.system.model.SysRole">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="role_name" jdbcType="VARCHAR" property="roleName" />
+    <result column="role_value" jdbcType="VARCHAR" property="roleValue" />
+    <result column="role_desc" jdbcType="VARCHAR" property="roleDesc" />
+    <result column="logical_del" jdbcType="TINYINT" property="logicalDel" />
+    <result column="create_by" jdbcType="INTEGER" property="createBy" />
+    <result column="create_name" jdbcType="VARCHAR" property="createName" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_by" jdbcType="INTEGER" property="updateBy" />
+    <result column="update_name" jdbcType="VARCHAR" property="updateName" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+      sys_role.id, sys_role.role_name, sys_role.role_value, sys_role.role_desc, sys_role.logical_del,
+      sys_role.create_by, sys_role.create_name, sys_role.create_time,
+      sys_role.update_by, sys_role.update_name, sys_role.update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sys_role
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="listBySysUserId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from sys_role, sys_role_user sr
+      where sys_role.id = sr.role_id and sr.user_id = #{sysUserId, jdbcType=INTEGER}
+  </select>
+  <select id="listRole" resultType="map">
+    SELECT
+    id,
+    role_name roleName,
+    role_value roleValue,
+    role_desc roleDesc
+    FROM sys_role
+    <where>
+      logical_del = 0
+      <if test="roleName != null and roleName != ''">
+        AND role_name LIKE CONCAT('%', #{roleName}, '%')
+      </if>
+      <if test="roleValue != null and roleValue != ''">
+        AND role_value LIKE CONCAT('%', #{roleValue}, '%')
+      </if>
+    </where>
+  </select>
+  <select id="listRoleNotAdmin" resultType="map">
+    SELECT
+    id,
+    role_name roleName,
+    role_value roleValue,
+    role_desc roleDesc
+    FROM sys_role
+    <where>
+      logical_del = 0 AND id != 1
+      <if test="roleName != null and roleName != ''">
+        AND role_name LIKE CONCAT('%', #{roleName}, '%')
+      </if>
+      <if test="roleValue != null and roleValue != ''">
+        AND role_value LIKE CONCAT('%', #{roleValue}, '%')
+      </if>
+    </where>
+  </select>
+  <select id="listRoleByFunctionId" resultType="map">
+    SELECT
+    sr.id,
+    sr.role_name roleName,
+    sr.role_value roleValue,
+    sr.role_desc roleDesc
+    FROM sys_role sr LEFT JOIN sys_role_function srf ON sr.id = srf.role_id
+    <where>
+      sr.logical_del = 0
+      <if test="functionId != null and functionId != ''">
+        <if test="showOrAdd == 1">
+          AND srf.function_id = #{functionId}
+        </if>
+        <if test="showOrAdd == 2">
+          AND sr.id NOT IN (
+          SELECT
+          role_id
+          FROM
+          sys_role_function
+          WHERE
+          function_id = #{functionId}
+          )
+        </if>
+      </if>
+      <if test="roleName != null and roleName != ''">
+        AND sr.role_name LIKE CONCAT('%', #{roleName}, '%')
+      </if>
+      <if test="roleValue != null and roleValue != ''">
+        AND sr.role_value LIKE CONCAT('%', #{roleValue}, '%')
+      </if>
+    </where>
+    GROUP BY sr.id
+  </select>
+  <select id="listAddRole" resultType="map">
+    SELECT
+    id,
+    role_name roleName,
+    role_value roleValue,
+    role_desc roleDesc
+    FROM sys_role
+    <where>
+      logical_del = 0
+      <if test="roleIds != null">
+        AND id NOT IN
+        <foreach item="item" index="index" collection="roleIds" open="(" separator="," close=")">
+          #{item}
+        </foreach>
+      </if>
+      <if test="roleName != null and roleName != ''">
+        AND role_name LIKE CONCAT('%', #{roleName}, '%')
+      </if>
+      <if test="roleValue != null and roleValue != ''">
+        AND role_value LIKE CONCAT('%', #{roleValue}, '%')
+      </if>
+    </where>
+  </select>
+  <select id="showRoleUsers" resultType="map">
+    SELECT
+    su.id,
+    su.login_name loginName,
+    su.user_name userName,
+    su.mobile,
+    su.status,
+    GROUP_CONCAT(sd.department_name SEPARATOR ',') departmentName
+    FROM sys_user su LEFT JOIN sys_role_user sru ON su.id = sru.user_id
+    LEFT JOIN sys_department_user sdu ON su.id = sdu.user_id
+    LEFT JOIN sys_department sd ON sdu.department_id = sd.id
+    <where>
+      su.logical_del = 0 AND sru.role_id = #{roleId}
+      <if test="loginName != null and loginName != ''">
+        AND su.login_name LIKE CONCAT('%', #{loginName}, '%')
+      </if>
+      <if test="userName != null and userName != ''">
+        AND su.user_name LIKE CONCAT('%', #{userName}, '%')
+      </if>
+    </where>
+    GROUP BY su.login_name
+  </select>
+  <insert id="insertSelective" parameterType="com.htcs.wework.system.model.SysRole">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into sys_role
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="roleName != null">
+        role_name,
+      </if>
+      <if test="roleValue != null">
+        role_value,
+      </if>
+      <if test="roleDesc != null">
+        role_desc,
+      </if>
+      <if test="logicalDel != null">
+        logical_del,
+      </if>
+      <if test="createBy != null">
+        create_by,
+      </if>
+      <if test="createName != null">
+        create_name,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateBy != null">
+        update_by,
+      </if>
+      <if test="updateName != null">
+        update_name,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="roleName != null">
+        #{roleName,jdbcType=VARCHAR},
+      </if>
+      <if test="roleValue != null">
+        #{roleValue,jdbcType=VARCHAR},
+      </if>
+      <if test="roleDesc != null">
+        #{roleDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="logicalDel != null">
+        #{logicalDel,jdbcType=TINYINT},
+      </if>
+      <if test="createBy != null">
+        #{createBy,jdbcType=INTEGER},
+      </if>
+      <if test="createName != null">
+        #{createName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null">
+        #{updateBy,jdbcType=INTEGER},
+      </if>
+      <if test="updateName != null">
+        #{updateName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.htcs.wework.system.model.SysRole">
+    update sys_role
+    <set>
+      <if test="roleName != null">
+        role_name = #{roleName,jdbcType=VARCHAR},
+      </if>
+      <if test="roleValue != null">
+        role_value = #{roleValue,jdbcType=VARCHAR},
+      </if>
+      <if test="roleDesc != null">
+        role_desc = #{roleDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="logicalDel != null">
+        logical_del = #{logicalDel,jdbcType=TINYINT},
+      </if>
+      <if test="createBy != null">
+        create_by = #{createBy,jdbcType=INTEGER},
+      </if>
+      <if test="createName != null">
+        create_name = #{createName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null">
+        update_by = #{updateBy,jdbcType=INTEGER},
+      </if>
+      <if test="updateName != null">
+        update_name = #{updateName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="logicalDeleteByIds">
+    UPDATE sys_role
+    SET logical_del = 1,
+    update_by = #{updateBy,jdbcType=INTEGER},
+    update_name = #{updateName,jdbcType=VARCHAR},
+    update_time = now()
+    WHERE id IN
+    <foreach collection="idList" item="ids" index="index" open="(" separator="," close=");">
+      #{ids}
+    </foreach>
+    DELETE FROM sys_role_user WHERE role_id IN
+    <foreach collection="idList" item="ids" index="index" open="(" separator="," close=");">
+      #{ids}
+    </foreach>
+  </update>
+</mapper>

@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.htcs.wework.system.dao.SysGroupMapper">
+    <resultMap id="BaseResultMap" type="com.htcs.wework.system.model.SysGroup">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="group_name" jdbcType="VARCHAR" property="groupName"/>
+        <result column="group_desc" jdbcType="VARCHAR" property="groupDesc"/>
+        <result column="group_tags" jdbcType="VARCHAR" property="groupTags"/>
+        <result column="logical_del" jdbcType="TINYINT" property="logicalDel"/>
+        <result column="create_by" jdbcType="INTEGER" property="createBy"/>
+        <result column="create_name" jdbcType="VARCHAR" property="createName"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_by" jdbcType="INTEGER" property="updateBy"/>
+        <result column="update_name" jdbcType="VARCHAR" property="updateName"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, group_name, group_desc, group_tags, logical_del, create_by, create_name, create_time,
+        update_by, update_name, update_time
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_group
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <select id="listGroup" resultType="map">
+        SELECT
+        id,
+        group_name groupName,
+        group_desc groupDesc
+        FROM sys_group
+        <where>
+            logical_del = 0
+            <if test="groupName != null and groupName != ''">
+                AND group_name LIKE CONCAT('%', #{groupName}, '%')
+            </if>
+        </where>
+    </select>
+    <select id="listAddGroup" resultType="map">
+        SELECT
+        id,
+        group_name groupName,
+        group_desc groupDesc
+        FROM sys_group
+        <where>
+            logical_del = 0
+            <if test="groupName != null and groupName != ''">
+                AND group_name LIKE CONCAT('%', #{groupName}, '%')
+            </if>
+            <if test="groupIds != null">
+                AND id NOT IN
+                <foreach collection="groupIds" item="item" index="index" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+    <select id="showGroupUsers" resultType="map">
+        SELECT
+        su.id,
+        su.login_name loginName,
+        su.user_name userName,
+        su.mobile,
+        su.status,
+        GROUP_CONCAT(sd.department_name SEPARATOR ',') departmentName
+        FROM sys_user su LEFT JOIN sys_group_user sgu ON su.id = sgu.user_id
+        LEFT JOIN sys_department_user sdu ON su.id = sdu.user_id
+        LEFT JOIN sys_department sd ON sdu.department_id = sd.id
+        <where>
+            su.logical_del = 0 AND sgu.group_id = #{groupId}
+            <if test="loginName != null and loginName != ''">
+                AND su.login_name LIKE CONCAT('%', #{loginName}, '%')
+            </if>
+            <if test="userName != null and userName != ''">
+                AND su.user_name LIKE CONCAT('%', #{userName}, '%')
+            </if>
+        </where>
+        GROUP BY su.login_name
+    </select>
+    <update id="logicalDeleteByIds">
+        UPDATE sys_group
+        SET logical_del = 1,
+        update_by = #{updateBy,jdbcType=INTEGER},
+        update_name = #{updateName,jdbcType=VARCHAR},
+        update_time = #{updateTime,jdbcType=TIMESTAMP}
+        WHERE id IN
+        <foreach collection="idList" item="ids" index="index" open="(" separator="," close=");">
+            #{ids}
+        </foreach>
+        DELETE FROM sys_group_user WHERE group_id IN
+        <foreach collection="idList" item="ids" index="index" open="(" separator="," close=");">
+            #{ids}
+        </foreach>
+    </update>
+    <insert id="insertSelective" parameterType="com.htcs.wework.system.model.SysGroup">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into sys_group
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="groupName != null">
+                group_name,
+            </if>
+            <if test="groupDesc != null">
+                group_desc,
+            </if>
+            <if test="groupTags != null">
+                group_tags,
+            </if>
+            <if test="logicalDel != null">
+                logical_del,
+            </if>
+            <if test="createBy != null">
+                create_by,
+            </if>
+            <if test="createName != null">
+                create_name,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateBy != null">
+                update_by,
+            </if>
+            <if test="updateName != null">
+                update_name,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="groupName != null">
+                #{groupName,jdbcType=VARCHAR},
+            </if>
+            <if test="groupDesc != null">
+                #{groupDesc,jdbcType=VARCHAR},
+            </if>
+            <if test="groupTags != null">
+                #{groupTags,jdbcType=VARCHAR},
+            </if>
+            <if test="logicalDel != null">
+                #{logicalDel,jdbcType=TINYINT},
+            </if>
+            <if test="createBy != null">
+                #{createBy,jdbcType=INTEGER},
+            </if>
+            <if test="createName != null">
+                #{createName,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateBy != null">
+                #{updateBy,jdbcType=INTEGER},
+            </if>
+            <if test="updateName != null">
+                #{updateName,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.htcs.wework.system.model.SysGroup">
+        update sys_group
+        <set>
+            <if test="groupName != null">
+                group_name = #{groupName,jdbcType=VARCHAR},
+            </if>
+            <if test="groupDesc != null">
+                group_desc = #{groupDesc,jdbcType=VARCHAR},
+            </if>
+            <if test="groupTags != null">
+                group_tags = #{groupTags,jdbcType=VARCHAR},
+            </if>
+            <if test="logicalDel != null">
+                logical_del = #{logicalDel,jdbcType=TINYINT},
+            </if>
+            <if test="createBy != null">
+                create_by = #{createBy,jdbcType=INTEGER},
+            </if>
+            <if test="createName != null">
+                create_name = #{createName,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy,jdbcType=INTEGER},
+            </if>
+            <if test="updateName != null">
+                update_name = #{updateName,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+</mapper>

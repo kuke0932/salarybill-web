@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="system">
+        <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
+        <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
+        <dependent-module archiveName="system_controller-1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/system_controller/system_controller">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="system_service-1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/system_service/system_service">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="system_dao-1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/system_dao/system_dao">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="system_model-1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/system_model/system_model">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="common_web_configuration-1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/common_web_configuration/common_web_configuration">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="common_model-1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/common_model/common_model">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="common_util-1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/common_util/common_util">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <property name="context-root" value="system"/>
+        <property name="java-output-path" value="/system_web/target/classes"/>
+    </wb-module>
+</project-modules>

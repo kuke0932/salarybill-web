@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.htcs.wework.system.dao.SysFunctionMapper">
+  <resultMap id="BaseResultMap" type="com.htcs.wework.system.model.SysFunction">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="parent_id" jdbcType="INTEGER" property="parentId" />
+    <result column="function_name" jdbcType="VARCHAR" property="functionName" />
+    <result column="function_code" jdbcType="VARCHAR" property="functionCode" />
+    <result column="function_url" jdbcType="VARCHAR" property="functionUrl" />
+    <result column="function_type" jdbcType="TINYINT" property="functionType" />
+    <result column="function_sort" jdbcType="INTEGER" property="functionSort" />
+    <result column="icon_style" jdbcType="VARCHAR" property="iconStyle" />
+    <result column="is_visible" jdbcType="TINYINT" property="isVisible" />
+    <result column="logical_del" jdbcType="TINYINT" property="logicalDel" />
+    <result column="create_by" jdbcType="INTEGER" property="createBy" />
+    <result column="create_name" jdbcType="VARCHAR" property="createName" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_by" jdbcType="INTEGER" property="updateBy" />
+    <result column="update_name" jdbcType="VARCHAR" property="updateName" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    sys_function.id, sys_function.parent_id, sys_function.function_name, sys_function.function_code,
+    sys_function.function_url, sys_function.function_type, sys_function.function_sort,
+    sys_function.icon_style, sys_function.is_visible,
+    sys_function.logical_del, sys_function.create_by, sys_function.create_name,
+    sys_function.create_time, sys_function.update_by, sys_function.update_name, sys_function.update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sys_function
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="countByParentId" resultType="int">
+    SELECT COUNT(*)
+    FROM sys_function
+    WHERE parent_id = #{parentId} AND logical_del = 0
+  </select>
+  <select id="listFunctionsByRoleIds" parameterType="java.util.List" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from sys_function, sys_role_function srf
+    where sys_function.id = srf.function_id and srf.role_id in
+    <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </select>
+  <select id="listFunctions" resultType="com.htcs.wework.system.model.dto.TreeDto">
+    SELECT
+    id,
+    function_name label,
+    parent_id parentId
+    FROM sys_function WHERE logical_del = 0
+    ORDER BY parent_id,function_sort
+  </select>
+  <insert id="insertSelective" parameterType="com.htcs.wework.system.model.SysFunction">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into sys_function
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="parentId != null">
+        parent_id,
+      </if>
+      <if test="functionName != null">
+        function_name,
+      </if>
+      <if test="functionCode != null">
+        function_code,
+      </if>
+      <if test="functionUrl != null">
+        function_url,
+      </if>
+      <if test="functionType != null">
+        function_type,
+      </if>
+      <if test="functionSort != null">
+        function_sort,
+      </if>
+      <if test="iconStyle != null">
+        icon_style,
+      </if>
+      <if test="isVisible != null">
+        is_visible,
+      </if>
+      <if test="logicalDel != null">
+        logical_del,
+      </if>
+      <if test="createBy != null">
+        create_by,
+      </if>
+      <if test="createName != null">
+        create_name,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateBy != null">
+        update_by,
+      </if>
+      <if test="updateName != null">
+        update_name,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="parentId != null">
+        #{parentId,jdbcType=INTEGER},
+      </if>
+      <if test="functionName != null">
+        #{functionName,jdbcType=VARCHAR},
+      </if>
+      <if test="functionCode != null">
+        #{functionCode,jdbcType=VARCHAR},
+      </if>
+      <if test="functionUrl != null">
+        #{functionUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="functionType != null">
+        #{functionType,jdbcType=TINYINT},
+      </if>
+      <if test="functionSort != null">
+        #{functionSort,jdbcType=INTEGER},
+      </if>
+      <if test="iconStyle != null">
+        #{iconStyle,jdbcType=VARCHAR},
+      </if>
+      <if test="isVisible != null">
+        #{isVisible,jdbcType=TINYINT},
+      </if>
+      <if test="logicalDel != null">
+        #{logicalDel,jdbcType=TINYINT},
+      </if>
+      <if test="createBy != null">
+        #{createBy,jdbcType=INTEGER},
+      </if>
+      <if test="createName != null">
+        #{createName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null">
+        #{updateBy,jdbcType=INTEGER},
+      </if>
+      <if test="updateName != null">
+        #{updateName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.htcs.wework.system.model.SysFunction">
+    update sys_function
+    <set>
+      <if test="parentId != null">
+        parent_id = #{parentId,jdbcType=INTEGER},
+      </if>
+      <if test="functionName != null">
+        function_name = #{functionName,jdbcType=VARCHAR},
+      </if>
+      <if test="functionCode != null">
+        function_code = #{functionCode,jdbcType=VARCHAR},
+      </if>
+      <if test="functionUrl != null">
+        function_url = #{functionUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="functionType != null">
+        function_type = #{functionType,jdbcType=TINYINT},
+      </if>
+      <if test="functionSort != null">
+        function_sort = #{functionSort,jdbcType=INTEGER},
+      </if>
+      <if test="iconStyle != null">
+        icon_style = #{iconStyle,jdbcType=VARCHAR},
+      </if>
+      <if test="isVisible != null">
+        is_visible = #{isVisible,jdbcType=TINYINT},
+      </if>
+      <if test="logicalDel != null">
+        logical_del = #{logicalDel,jdbcType=TINYINT},
+      </if>
+      <if test="createBy != null">
+        create_by = #{createBy,jdbcType=INTEGER},
+      </if>
+      <if test="createName != null">
+        create_name = #{createName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null">
+        update_by = #{updateBy,jdbcType=INTEGER},
+      </if>
+      <if test="updateName != null">
+        update_name = #{updateName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="logicalDeleteByIds">
+    UPDATE sys_function SET
+    logical_del = 1,
+    update_by = #{id,jdbcType=INTEGER},
+    update_name = #{userName,jdbcType=VARCHAR},
+    update_time = now()
+    WHERE id IN
+    <foreach collection="idList" item="item" open="(" separator="," close=");">
+      #{item}
+    </foreach>
+    DELETE FROM sys_role_function WHERE function_id IN
+    <foreach collection="idList" item="item" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </update>
+</mapper>

@@ -1,2 +1,9 @@
-# salarybill-web
-一个工资条的小demo
+# webapp
+webapp maven archetype
+
+
+## linux or macOS
+sh createArchetype.sh
+
+## windows
+createArchetype.bat

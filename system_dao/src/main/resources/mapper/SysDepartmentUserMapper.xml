@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.htcs.wework.system.dao.SysDepartmentUserMapper">
+  <resultMap id="BaseResultMap" type="com.htcs.wework.system.model.SysDepartmentUser">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="department_id" jdbcType="INTEGER" property="departmentId" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="logical_del" jdbcType="TINYINT" property="logicalDel" />
+    <result column="create_by" jdbcType="INTEGER" property="createBy" />
+    <result column="create_name" jdbcType="VARCHAR" property="createName" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_by" jdbcType="INTEGER" property="updateBy" />
+    <result column="update_name" jdbcType="VARCHAR" property="updateName" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, department_id, user_id, logical_del, create_by, create_name, create_time, update_by, 
+    update_name, update_time
+  </sql>
+  <select id="listDepartmentIdByUserId" resultType="java.lang.Integer">
+    SELECT department_id FROM sys_department_user WHERE user_id = #{userId}
+  </select>
+  <select id="listDepartmentByUserId" resultType="com.htcs.wework.system.model.SysDepartment">
+    SELECT
+      sd.id,
+      sd.parent_id parentId,
+      sd.department_name departmentName,
+      sd.department_desc departmentDesc,
+      sd.department_tags departmentTags,
+      sd.logical_del logicalDel,
+      sd.create_by createBy,
+      sd.create_name createName,
+      sd.create_time createTime,
+      sd.update_by updateBy,
+      sd.update_name updateName,
+      sd.update_time updateTime
+    FROM sys_department sd LEFT JOIN sys_department_user sdu ON sd.id = sdu.department_id
+    WHERE sdu.user_id = #{userId}
+  </select>
+  <delete id="deleteByUserId">
+    DELETE FROM sys_department_user
+    WHERE user_id = #{userId}
+  </delete>
+  <insert id="insertSelective" parameterType="com.htcs.wework.system.model.SysDepartmentUser">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into sys_department_user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="departmentId != null">
+        department_id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="logicalDel != null">
+        logical_del,
+      </if>
+      <if test="createBy != null">
+        create_by,
+      </if>
+      <if test="createName != null">
+        create_name,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateBy != null">
+        update_by,
+      </if>
+      <if test="updateName != null">
+        update_name,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="departmentId != null">
+        #{departmentId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="logicalDel != null">
+        #{logicalDel,jdbcType=TINYINT},
+      </if>
+      <if test="createBy != null">
+        #{createBy,jdbcType=INTEGER},
+      </if>
+      <if test="createName != null">
+        #{createName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null">
+        #{updateBy,jdbcType=INTEGER},
+      </if>
+      <if test="updateName != null">
+        #{updateName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+</mapper>

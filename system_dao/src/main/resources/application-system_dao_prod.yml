@@ -1,0 +1,7 @@
+spring:
+#mysql数据库连接配置
+  datasource:
+    url: jdbc:mysql://101.200.33.98:33306/salarybill?useUnicode=true&characterEncoding=utf8&autoReconnect=true&rewriteBatchedStatements=TRUE
+    username: salarybill
+    password: salary!#%&(bill@$^*)
+    driver-class-name: com.mysql.jdbc.Driver

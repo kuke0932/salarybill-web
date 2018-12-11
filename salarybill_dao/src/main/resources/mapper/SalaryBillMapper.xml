@@ -1,0 +1,730 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.htcs.wework.salarybill.dao.SalaryBillDao" >
+  <resultMap id="BaseResultMap" type="com.htcs.wework.salarybill.model.SalaryBill" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="entry_time" property="entryTime" jdbcType="DATE" />
+    <result column="duty_attendance" property="dutyAttendance" jdbcType="VARCHAR" />
+    <result column="actual_attendance" property="actualAttendance" jdbcType="VARCHAR" />
+    <result column="base_salary" property="baseSalary" jdbcType="VARCHAR" />
+    <result column="percentage" property="percentage" jdbcType="VARCHAR" />
+    <result column="work_age_subsidy" property="workAgeSubsidy" jdbcType="VARCHAR" />
+    <result column="total_day_reward" property="totalDayReward" jdbcType="VARCHAR" />
+    <result column="traffic_subsidy" property="trafficSubsidy" jdbcType="VARCHAR" />
+    <result column="communication_subsidy" property="communicationSubsidy" jdbcType="VARCHAR" />
+    <result column="birthday_subsidy" property="birthdaySubsidy" jdbcType="VARCHAR" />
+    <result column="business_trip_subsidy" property="businessTripSubsidy" jdbcType="VARCHAR" />
+    <result column="should_pay_total" property="shouldPayTotal" jdbcType="VARCHAR" />
+    <result column="be_late_withhold" property="beLateWithhold" jdbcType="VARCHAR" />
+    <result column="endowment_insurance" property="endowmentInsurance" jdbcType="VARCHAR" />
+    <result column="medical_insurance" property="medicalInsurance" jdbcType="VARCHAR" />
+    <result column="unemployment_insurance" property="unemploymentInsurance" jdbcType="VARCHAR" />
+    <result column="housing_provident_fund" property="housingProvidentFund" jdbcType="VARCHAR" />
+    <result column="actural_pay_total" property="acturalPayTotal" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="salary_date" property="salaryDate" jdbcType="DATE" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="balance_pay" property="balancePay" jdbcType="VARCHAR" />
+    <result column="already_pay" property="alreadyPay" jdbcType="VARCHAR" />
+    <result column="logical_del" property="logicalDel" jdbcType="TINYINT" />
+    <result column="create_by" property="createBy" jdbcType="INTEGER" />
+    <result column="create_name" property="createName" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_by" property="updateBy" jdbcType="INTEGER" />
+    <result column="update_name" property="updateName" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="problem" property="problem" jdbcType="TINYINT" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    <if test="fields == null" >
+      id, name, entry_time, duty_attendance, actual_attendance, base_salary, percentage, 
+      work_age_subsidy, total_day_reward, traffic_subsidy, communication_subsidy, birthday_subsidy, 
+      business_trip_subsidy, should_pay_total, be_late_withhold, endowment_insurance, medical_insurance, 
+      unemployment_insurance, housing_provident_fund, actural_pay_total, status, salary_date, 
+      remark, balance_pay, already_pay, logical_del, create_by, create_name, create_time, 
+      update_by, update_name, update_time, problem
+    </if>
+    <if test="fields != null" >
+      ${fields}
+    </if>
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.htcs.wework.salarybill.model.SalaryBillQuery" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from salary_bill
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="startRow != null" >
+      limit #{startRow} , #{pageSize}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    id,name,entry_time,duty_attendance,actual_attendance,base_salary,percentage,work_age_subsidy,total_day_reward,traffic_subsidy,communication_subsidy,birthday_subsidy,business_trip_subsidy,should_pay_total,be_late_withhold,endowment_insurance,medical_insurance,unemployment_insurance,housing_provident_fund,actural_pay_total,status,salary_date,remark,balance_pay,already_pay,logical_del,create_by,create_name,create_time,update_by,update_name,update_time,problem
+    from salary_bill
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from salary_bill
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.htcs.wework.salarybill.model.SalaryBillQuery" >
+    delete from salary_bill
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.htcs.wework.salarybill.model.SalaryBill" >
+    insert into salary_bill (id, name, entry_time, 
+      duty_attendance, actual_attendance, base_salary, 
+      percentage, work_age_subsidy, total_day_reward, 
+      traffic_subsidy, communication_subsidy, birthday_subsidy, 
+      business_trip_subsidy, should_pay_total, be_late_withhold, 
+      endowment_insurance, medical_insurance, unemployment_insurance, 
+      housing_provident_fund, actural_pay_total, 
+      status, salary_date, remark, 
+      balance_pay, already_pay, logical_del, 
+      create_by, create_name, create_time, 
+      update_by, update_name, update_time, 
+      problem)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{entryTime,jdbcType=DATE}, 
+      #{dutyAttendance,jdbcType=VARCHAR}, #{actualAttendance,jdbcType=VARCHAR}, #{baseSalary,jdbcType=VARCHAR}, 
+      #{percentage,jdbcType=VARCHAR}, #{workAgeSubsidy,jdbcType=VARCHAR}, #{totalDayReward,jdbcType=VARCHAR}, 
+      #{trafficSubsidy,jdbcType=VARCHAR}, #{communicationSubsidy,jdbcType=VARCHAR}, #{birthdaySubsidy,jdbcType=VARCHAR}, 
+      #{businessTripSubsidy,jdbcType=VARCHAR}, #{shouldPayTotal,jdbcType=VARCHAR}, #{beLateWithhold,jdbcType=VARCHAR}, 
+      #{endowmentInsurance,jdbcType=VARCHAR}, #{medicalInsurance,jdbcType=VARCHAR}, #{unemploymentInsurance,jdbcType=VARCHAR}, 
+      #{housingProvidentFund,jdbcType=VARCHAR}, #{acturalPayTotal,jdbcType=VARCHAR}, 
+      #{status,jdbcType=INTEGER}, #{salaryDate,jdbcType=DATE}, #{remark,jdbcType=VARCHAR}, 
+      #{balancePay,jdbcType=VARCHAR}, #{alreadyPay,jdbcType=VARCHAR}, #{logicalDel,jdbcType=TINYINT}, 
+      #{createBy,jdbcType=INTEGER}, #{createName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateBy,jdbcType=INTEGER}, #{updateName,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{problem,jdbcType=TINYINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.htcs.wework.salarybill.model.SalaryBill" >
+    insert into salary_bill
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="entryTime != null" >
+        entry_time,
+      </if>
+      <if test="dutyAttendance != null" >
+        duty_attendance,
+      </if>
+      <if test="actualAttendance != null" >
+        actual_attendance,
+      </if>
+      <if test="baseSalary != null" >
+        base_salary,
+      </if>
+      <if test="percentage != null" >
+        percentage,
+      </if>
+      <if test="workAgeSubsidy != null" >
+        work_age_subsidy,
+      </if>
+      <if test="totalDayReward != null" >
+        total_day_reward,
+      </if>
+      <if test="trafficSubsidy != null" >
+        traffic_subsidy,
+      </if>
+      <if test="communicationSubsidy != null" >
+        communication_subsidy,
+      </if>
+      <if test="birthdaySubsidy != null" >
+        birthday_subsidy,
+      </if>
+      <if test="businessTripSubsidy != null" >
+        business_trip_subsidy,
+      </if>
+      <if test="shouldPayTotal != null" >
+        should_pay_total,
+      </if>
+      <if test="beLateWithhold != null" >
+        be_late_withhold,
+      </if>
+      <if test="endowmentInsurance != null" >
+        endowment_insurance,
+      </if>
+      <if test="medicalInsurance != null" >
+        medical_insurance,
+      </if>
+      <if test="unemploymentInsurance != null" >
+        unemployment_insurance,
+      </if>
+      <if test="housingProvidentFund != null" >
+        housing_provident_fund,
+      </if>
+      <if test="acturalPayTotal != null" >
+        actural_pay_total,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="salaryDate != null" >
+        salary_date,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="balancePay != null" >
+        balance_pay,
+      </if>
+      <if test="alreadyPay != null" >
+        already_pay,
+      </if>
+      <if test="logicalDel != null" >
+        logical_del,
+      </if>
+      <if test="createBy != null" >
+        create_by,
+      </if>
+      <if test="createName != null" >
+        create_name,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateBy != null" >
+        update_by,
+      </if>
+      <if test="updateName != null" >
+        update_name,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="problem != null" >
+        problem,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="entryTime != null" >
+        #{entryTime,jdbcType=DATE},
+      </if>
+      <if test="dutyAttendance != null" >
+        #{dutyAttendance,jdbcType=VARCHAR},
+      </if>
+      <if test="actualAttendance != null" >
+        #{actualAttendance,jdbcType=VARCHAR},
+      </if>
+      <if test="baseSalary != null" >
+        #{baseSalary,jdbcType=VARCHAR},
+      </if>
+      <if test="percentage != null" >
+        #{percentage,jdbcType=VARCHAR},
+      </if>
+      <if test="workAgeSubsidy != null" >
+        #{workAgeSubsidy,jdbcType=VARCHAR},
+      </if>
+      <if test="totalDayReward != null" >
+        #{totalDayReward,jdbcType=VARCHAR},
+      </if>
+      <if test="trafficSubsidy != null" >
+        #{trafficSubsidy,jdbcType=VARCHAR},
+      </if>
+      <if test="communicationSubsidy != null" >
+        #{communicationSubsidy,jdbcType=VARCHAR},
+      </if>
+      <if test="birthdaySubsidy != null" >
+        #{birthdaySubsidy,jdbcType=VARCHAR},
+      </if>
+      <if test="businessTripSubsidy != null" >
+        #{businessTripSubsidy,jdbcType=VARCHAR},
+      </if>
+      <if test="shouldPayTotal != null" >
+        #{shouldPayTotal,jdbcType=VARCHAR},
+      </if>
+      <if test="beLateWithhold != null" >
+        #{beLateWithhold,jdbcType=VARCHAR},
+      </if>
+      <if test="endowmentInsurance != null" >
+        #{endowmentInsurance,jdbcType=VARCHAR},
+      </if>
+      <if test="medicalInsurance != null" >
+        #{medicalInsurance,jdbcType=VARCHAR},
+      </if>
+      <if test="unemploymentInsurance != null" >
+        #{unemploymentInsurance,jdbcType=VARCHAR},
+      </if>
+      <if test="housingProvidentFund != null" >
+        #{housingProvidentFund,jdbcType=VARCHAR},
+      </if>
+      <if test="acturalPayTotal != null" >
+        #{acturalPayTotal,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="salaryDate != null" >
+        #{salaryDate,jdbcType=DATE},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="balancePay != null" >
+        #{balancePay,jdbcType=VARCHAR},
+      </if>
+      <if test="alreadyPay != null" >
+        #{alreadyPay,jdbcType=VARCHAR},
+      </if>
+      <if test="logicalDel != null" >
+        #{logicalDel,jdbcType=TINYINT},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=INTEGER},
+      </if>
+      <if test="createName != null" >
+        #{createName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        #{updateBy,jdbcType=INTEGER},
+      </if>
+      <if test="updateName != null" >
+        #{updateName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="problem != null" >
+        #{problem,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.htcs.wework.salarybill.model.SalaryBillQuery" resultType="java.lang.Integer" >
+    select count(*) from salary_bill
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update salary_bill
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.name != null" >
+        name = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.entryTime != null" >
+        entry_time = #{record.entryTime,jdbcType=DATE},
+      </if>
+      <if test="record.dutyAttendance != null" >
+        duty_attendance = #{record.dutyAttendance,jdbcType=VARCHAR},
+      </if>
+      <if test="record.actualAttendance != null" >
+        actual_attendance = #{record.actualAttendance,jdbcType=VARCHAR},
+      </if>
+      <if test="record.baseSalary != null" >
+        base_salary = #{record.baseSalary,jdbcType=VARCHAR},
+      </if>
+      <if test="record.percentage != null" >
+        percentage = #{record.percentage,jdbcType=VARCHAR},
+      </if>
+      <if test="record.workAgeSubsidy != null" >
+        work_age_subsidy = #{record.workAgeSubsidy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.totalDayReward != null" >
+        total_day_reward = #{record.totalDayReward,jdbcType=VARCHAR},
+      </if>
+      <if test="record.trafficSubsidy != null" >
+        traffic_subsidy = #{record.trafficSubsidy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.communicationSubsidy != null" >
+        communication_subsidy = #{record.communicationSubsidy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.birthdaySubsidy != null" >
+        birthday_subsidy = #{record.birthdaySubsidy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.businessTripSubsidy != null" >
+        business_trip_subsidy = #{record.businessTripSubsidy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.shouldPayTotal != null" >
+        should_pay_total = #{record.shouldPayTotal,jdbcType=VARCHAR},
+      </if>
+      <if test="record.beLateWithhold != null" >
+        be_late_withhold = #{record.beLateWithhold,jdbcType=VARCHAR},
+      </if>
+      <if test="record.endowmentInsurance != null" >
+        endowment_insurance = #{record.endowmentInsurance,jdbcType=VARCHAR},
+      </if>
+      <if test="record.medicalInsurance != null" >
+        medical_insurance = #{record.medicalInsurance,jdbcType=VARCHAR},
+      </if>
+      <if test="record.unemploymentInsurance != null" >
+        unemployment_insurance = #{record.unemploymentInsurance,jdbcType=VARCHAR},
+      </if>
+      <if test="record.housingProvidentFund != null" >
+        housing_provident_fund = #{record.housingProvidentFund,jdbcType=VARCHAR},
+      </if>
+      <if test="record.acturalPayTotal != null" >
+        actural_pay_total = #{record.acturalPayTotal,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null" >
+        status = #{record.status,jdbcType=INTEGER},
+      </if>
+      <if test="record.salaryDate != null" >
+        salary_date = #{record.salaryDate,jdbcType=DATE},
+      </if>
+      <if test="record.remark != null" >
+        remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.balancePay != null" >
+        balance_pay = #{record.balancePay,jdbcType=VARCHAR},
+      </if>
+      <if test="record.alreadyPay != null" >
+        already_pay = #{record.alreadyPay,jdbcType=VARCHAR},
+      </if>
+      <if test="record.logicalDel != null" >
+        logical_del = #{record.logicalDel,jdbcType=TINYINT},
+      </if>
+      <if test="record.createBy != null" >
+        create_by = #{record.createBy,jdbcType=INTEGER},
+      </if>
+      <if test="record.createName != null" >
+        create_name = #{record.createName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateBy != null" >
+        update_by = #{record.updateBy,jdbcType=INTEGER},
+      </if>
+      <if test="record.updateName != null" >
+        update_name = #{record.updateName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.problem != null" >
+        problem = #{record.problem,jdbcType=TINYINT},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update salary_bill
+    set id = #{record.id,jdbcType=INTEGER},
+      name = #{record.name,jdbcType=VARCHAR},
+      entry_time = #{record.entryTime,jdbcType=DATE},
+      duty_attendance = #{record.dutyAttendance,jdbcType=VARCHAR},
+      actual_attendance = #{record.actualAttendance,jdbcType=VARCHAR},
+      base_salary = #{record.baseSalary,jdbcType=VARCHAR},
+      percentage = #{record.percentage,jdbcType=VARCHAR},
+      work_age_subsidy = #{record.workAgeSubsidy,jdbcType=VARCHAR},
+      total_day_reward = #{record.totalDayReward,jdbcType=VARCHAR},
+      traffic_subsidy = #{record.trafficSubsidy,jdbcType=VARCHAR},
+      communication_subsidy = #{record.communicationSubsidy,jdbcType=VARCHAR},
+      birthday_subsidy = #{record.birthdaySubsidy,jdbcType=VARCHAR},
+      business_trip_subsidy = #{record.businessTripSubsidy,jdbcType=VARCHAR},
+      should_pay_total = #{record.shouldPayTotal,jdbcType=VARCHAR},
+      be_late_withhold = #{record.beLateWithhold,jdbcType=VARCHAR},
+      endowment_insurance = #{record.endowmentInsurance,jdbcType=VARCHAR},
+      medical_insurance = #{record.medicalInsurance,jdbcType=VARCHAR},
+      unemployment_insurance = #{record.unemploymentInsurance,jdbcType=VARCHAR},
+      housing_provident_fund = #{record.housingProvidentFund,jdbcType=VARCHAR},
+      actural_pay_total = #{record.acturalPayTotal,jdbcType=VARCHAR},
+      status = #{record.status,jdbcType=INTEGER},
+      salary_date = #{record.salaryDate,jdbcType=DATE},
+      remark = #{record.remark,jdbcType=VARCHAR},
+      balance_pay = #{record.balancePay,jdbcType=VARCHAR},
+      already_pay = #{record.alreadyPay,jdbcType=VARCHAR},
+      logical_del = #{record.logicalDel,jdbcType=TINYINT},
+      create_by = #{record.createBy,jdbcType=INTEGER},
+      create_name = #{record.createName,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_by = #{record.updateBy,jdbcType=INTEGER},
+      update_name = #{record.updateName,jdbcType=VARCHAR},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      problem = #{record.problem,jdbcType=TINYINT}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.htcs.wework.salarybill.model.SalaryBill" >
+    update salary_bill
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="entryTime != null" >
+        entry_time = #{entryTime,jdbcType=DATE},
+      </if>
+      <if test="dutyAttendance != null" >
+        duty_attendance = #{dutyAttendance,jdbcType=VARCHAR},
+      </if>
+      <if test="actualAttendance != null" >
+        actual_attendance = #{actualAttendance,jdbcType=VARCHAR},
+      </if>
+      <if test="baseSalary != null" >
+        base_salary = #{baseSalary,jdbcType=VARCHAR},
+      </if>
+      <if test="percentage != null" >
+        percentage = #{percentage,jdbcType=VARCHAR},
+      </if>
+      <if test="workAgeSubsidy != null" >
+        work_age_subsidy = #{workAgeSubsidy,jdbcType=VARCHAR},
+      </if>
+      <if test="totalDayReward != null" >
+        total_day_reward = #{totalDayReward,jdbcType=VARCHAR},
+      </if>
+      <if test="trafficSubsidy != null" >
+        traffic_subsidy = #{trafficSubsidy,jdbcType=VARCHAR},
+      </if>
+      <if test="communicationSubsidy != null" >
+        communication_subsidy = #{communicationSubsidy,jdbcType=VARCHAR},
+      </if>
+      <if test="birthdaySubsidy != null" >
+        birthday_subsidy = #{birthdaySubsidy,jdbcType=VARCHAR},
+      </if>
+      <if test="businessTripSubsidy != null" >
+        business_trip_subsidy = #{businessTripSubsidy,jdbcType=VARCHAR},
+      </if>
+      <if test="shouldPayTotal != null" >
+        should_pay_total = #{shouldPayTotal,jdbcType=VARCHAR},
+      </if>
+      <if test="beLateWithhold != null" >
+        be_late_withhold = #{beLateWithhold,jdbcType=VARCHAR},
+      </if>
+      <if test="endowmentInsurance != null" >
+        endowment_insurance = #{endowmentInsurance,jdbcType=VARCHAR},
+      </if>
+      <if test="medicalInsurance != null" >
+        medical_insurance = #{medicalInsurance,jdbcType=VARCHAR},
+      </if>
+      <if test="unemploymentInsurance != null" >
+        unemployment_insurance = #{unemploymentInsurance,jdbcType=VARCHAR},
+      </if>
+      <if test="housingProvidentFund != null" >
+        housing_provident_fund = #{housingProvidentFund,jdbcType=VARCHAR},
+      </if>
+      <if test="acturalPayTotal != null" >
+        actural_pay_total = #{acturalPayTotal,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="salaryDate != null" >
+        salary_date = #{salaryDate,jdbcType=DATE},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="balancePay != null" >
+        balance_pay = #{balancePay,jdbcType=VARCHAR},
+      </if>
+      <if test="alreadyPay != null" >
+        already_pay = #{alreadyPay,jdbcType=VARCHAR},
+      </if>
+      <if test="logicalDel != null" >
+        logical_del = #{logicalDel,jdbcType=TINYINT},
+      </if>
+      <if test="createBy != null" >
+        create_by = #{createBy,jdbcType=INTEGER},
+      </if>
+      <if test="createName != null" >
+        create_name = #{createName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        update_by = #{updateBy,jdbcType=INTEGER},
+      </if>
+      <if test="updateName != null" >
+        update_name = #{updateName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="problem != null" >
+        problem = #{problem,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.htcs.wework.salarybill.model.SalaryBill" >
+    update salary_bill
+    set name = #{name,jdbcType=VARCHAR},
+      entry_time = #{entryTime,jdbcType=DATE},
+      duty_attendance = #{dutyAttendance,jdbcType=VARCHAR},
+      actual_attendance = #{actualAttendance,jdbcType=VARCHAR},
+      base_salary = #{baseSalary,jdbcType=VARCHAR},
+      percentage = #{percentage,jdbcType=VARCHAR},
+      work_age_subsidy = #{workAgeSubsidy,jdbcType=VARCHAR},
+      total_day_reward = #{totalDayReward,jdbcType=VARCHAR},
+      traffic_subsidy = #{trafficSubsidy,jdbcType=VARCHAR},
+      communication_subsidy = #{communicationSubsidy,jdbcType=VARCHAR},
+      birthday_subsidy = #{birthdaySubsidy,jdbcType=VARCHAR},
+      business_trip_subsidy = #{businessTripSubsidy,jdbcType=VARCHAR},
+      should_pay_total = #{shouldPayTotal,jdbcType=VARCHAR},
+      be_late_withhold = #{beLateWithhold,jdbcType=VARCHAR},
+      endowment_insurance = #{endowmentInsurance,jdbcType=VARCHAR},
+      medical_insurance = #{medicalInsurance,jdbcType=VARCHAR},
+      unemployment_insurance = #{unemploymentInsurance,jdbcType=VARCHAR},
+      housing_provident_fund = #{housingProvidentFund,jdbcType=VARCHAR},
+      actural_pay_total = #{acturalPayTotal,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      salary_date = #{salaryDate,jdbcType=DATE},
+      remark = #{remark,jdbcType=VARCHAR},
+      balance_pay = #{balancePay,jdbcType=VARCHAR},
+      already_pay = #{alreadyPay,jdbcType=VARCHAR},
+      logical_del = #{logicalDel,jdbcType=TINYINT},
+      create_by = #{createBy,jdbcType=INTEGER},
+      create_name = #{createName,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_by = #{updateBy,jdbcType=INTEGER},
+      update_name = #{updateName,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      problem = #{problem,jdbcType=TINYINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+   <select id="getDatesByName" resultType="map">
+      select date_format(salary_date,'%Y') as salary_date
+       from salary_bill where name=#{username}  group by date_format(salary_date,'%Y')  order by salary_date desc
+  </select>
+  
+  <select id="getSalaryBillByName"  resultMap="BaseResultMap">
+        select   id, name, entry_time, duty_attendance, actual_attendance, base_salary, percentage, 
+      work_age_subsidy, total_day_reward, traffic_subsidy, communication_subsidy, birthday_subsidy, 
+      business_trip_subsidy, should_pay_total, be_late_withhold, endowment_insurance, medical_insurance, 
+      unemployment_insurance, housing_provident_fund, status, salary_date, remark, logical_del, 
+      create_by, create_name, create_time, update_by, update_name, update_time, actural_pay_total,balance_pay,already_pay,problem
+      from salary_bill where name=#{username} and date_format(salary_date,'%Y')=#{date} order by salary_date desc
+  </select>
+  
+  <select id="countSalaryBillByName"  resultType="Integer">
+        select   sum(actural_pay_total) from salary_bill where name=#{username} and date_format(salary_date,'%Y')=#{date}
+  </select>
+  
+  <select id="getSalaryBillsByCondition" parameterType="map" resultMap="BaseResultMap">
+     select  id, name, entry_time, duty_attendance, actual_attendance, base_salary, percentage, 
+      work_age_subsidy, total_day_reward, traffic_subsidy, communication_subsidy, birthday_subsidy, 
+      business_trip_subsidy, should_pay_total, be_late_withhold, endowment_insurance, medical_insurance, 
+      unemployment_insurance, housing_provident_fund, status, salary_date, remark, logical_del, 
+      create_by, create_name, create_time, update_by, update_name, update_time, actural_pay_total,balance_pay,already_pay,problem
+      from salary_bill 
+      <where>
+             <if test="username != null" >
+                name like '%' #{username} '%' and
+             </if>
+             <if test="status != null" >
+                status = #{status} and
+            </if>
+            <if test="date != null" >
+                date_format(salary_date,'%Y-%m') = #{date} and
+            </if>
+             1=1 
+      </where>
+      order by salary_date desc limit #{pageNum},#{pageSize}
+  </select>
+  
+  <select id="countSalaryBillsByCondition" parameterType="map" resultType="Integer">
+     select  count(*) from salary_bill 
+      <where>
+             <if test="username != null" >
+                name = #{username} and
+             </if>
+             <if test="status != null" >
+                status = #{status} and
+            </if>
+            <if test="date != null" >
+                date_format(salary_date,'%Y-%m') = #{date} and
+            </if>
+             1=1
+      </where>
+       order by salary_date desc 
+  </select>
+  
+  <select id="getSalaryByNameAndDate" parameterType="map" resultMap="BaseResultMap">
+    select id, name, entry_time, duty_attendance, actual_attendance, base_salary, percentage, 
+      work_age_subsidy, total_day_reward, traffic_subsidy, communication_subsidy, birthday_subsidy, 
+      business_trip_subsidy, should_pay_total, be_late_withhold, endowment_insurance, medical_insurance, 
+      unemployment_insurance, housing_provident_fund, status, salary_date, remark, logical_del, 
+      create_by, create_name, create_time, update_by, update_name, update_time, actural_pay_total,balance_pay,already_pay,problem
+      from salary_bill  where name = #{username} and date_format(salary_date,'%Y-%m') = #{date}
+  </select>
+</mapper>
